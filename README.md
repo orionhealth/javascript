@@ -1,7 +1,12 @@
-# Airbnb JavaScript Style Guide() {
+# Orion Health JavaScript Style Guide() {
 
-*A mostly reasonable approach to JavaScript*
+*A pretty darn reasonable approach to JavaScript, adapted from the [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript).*
 
+The primary changes from Airbnb's style guide are:
+
+  1. Replace jQuery related sections and examples with YUI equivalents
+  1. Use YUIDoc syntax for code comments/documentation
+  1. Use braces with all blocks, even single-line blocks
 
 ## Table of Contents
 
@@ -15,6 +20,7 @@
   1. [Hoisting](#hoisting)
   1. [Conditional Expressions & Equality](#conditional-expressions--equality)
   1. [Blocks](#blocks)
+  1. [Documentation](#documentation)
   1. [Comments](#comments)
   1. [Whitespace](#whitespace)
   1. [Commas](#commas)
@@ -24,8 +30,7 @@
   1. [Accessors](#accessors)
   1. [Constructors](#constructors)
   1. [Events](#events)
-  1. [Modules](#modules)
-  1. [jQuery](#jquery)
+  1. [YUI](#yui)
   1. [ECMAScript 5 Compatibility](#ecmascript-5-compatibility)
   1. [Testing](#testing)
   1. [Performance](#performance)
@@ -171,6 +176,20 @@
     }
     ```
 
+  - Format arrays as follows.
+
+    ```javascript
+    var a = [],
+        b = ['itsy', 'bitsy', 'spider'],
+        c = [{
+            label: 'tiny',
+            value: 'itsy'
+        }, {
+            label: 'scattered',
+            value: 'bitsy'
+        }];
+    ```
+
   - Avoid trailing commas in array initialization - see [Commas](#commas).
 
 **[⬆ back to top](#table-of-contents)**
@@ -200,7 +219,7 @@
     var myDonut = 'That donut doesn\'t belong to you, it\'s mine!';
     ```
 
-  - Strings longer than 80 characters should be written across multiple lines using string concatenation.
+  - Strings longer than 140 characters should be written across multiple lines using string concatenation.
   - Note: If overused, long strings with concatenation could impact performance. [jsPerf](http://jsperf.com/ya-string-concat) & [Discussion](https://github.com/airbnb/javascript/issues/40)
 
     ```javascript
@@ -355,6 +374,14 @@
     }
 
     var isJedi = getProp('jedi');
+    ```
+
+  - Use local references to nested properties. Local references should use the same name as the object/value the shortcut is for unless that property has the same name as a native object.
+
+    ```javascript
+    var Lang = Y.Lang,
+        Locale = Y.OHP.Locale,
+        YArray = Y.Array;
     ```
 
 **[⬆ back to top](#table-of-contents)**
@@ -626,44 +653,108 @@
 
 ## Blocks
 
-  - Use braces with all multi-line blocks.
+  - Use braces with all blocks. Always place the opening brace on the same line as the control structure declaration.
 
     ```javascript
     // bad
     if (test)
       return false;
 
-    // good
+    // bad
     if (test) return false;
 
     // good
-    if (test) {
-      return false;
-    }
-
-    // bad
-    function() { return false; }
+    if (test) { return false; }
 
     // good
-    function() {
-      return false;
+    for (initialization; condition; update) {
+        statements;
+    }
+
+    // good
+    if (someCondition) {
+        statements;
+    } else if (someOtherCondition) {
+        statements;
+    } else {
+        statements;
+    }
+
+    // good
+    switch (condition) {
+        case ABC:
+            statements;
+            break;
+        case DEF:
+            statements;
+            break;
+        default:
+            statements;
     }
     ```
 
 **[⬆ back to top](#table-of-contents)**
 
 
+## Documentation
+
+  - Document modules, classes, methods and attributes of modules using YUIDoc comments. These use the double start syntax: `/** ... **/`. Include a description, specify types and values for all parameters and return values.
+
+    ```javascript
+    // Example module YUIDoc
+    /**
+    Provides the base Widget class...
+
+    @module widget
+    **/
+
+    // Example class YUIDoc
+    /**
+    A utility that brokers HTTP requests...
+
+    @class IO
+    @constructor
+    **/
+
+    // Example method YUIDoc
+    /**
+    How many items are in this list?
+
+    @method size
+    @return { Integer } Number of items in the list
+    */
+
+    // Example attribute YUIDoc
+    /**
+    Indicates whether this Widget
+    has been rendered...
+
+    @attribute rendered
+    @readOnly
+    @default false
+    @type boolean
+    **/
+    ```
+
+  - Add the `@private` attribute to private methods that you wish to document, but that should not be made public.
+
+    See the [YUIDoc Syntax Reference](http://yui.github.io/yuidoc/syntax/index.html) for more information.
+
+**[⬆ back to top](#table-of-contents)**
+
+
 ## Comments
 
-  - Use `/** ... */` for multiline comments. Include a description, specify types and values for all parameters and return values.
+  - Use YUIDoc to document all methods available to people using your class (public and private). Scroll up for more information.
+
+  - Use `/* ... */` for multiline comments. This style of comments should be used for documenting closure scoped functions/constants etc that are physically private (i.e. are not available to people using your class). Include a description, specify types and values for all parameters and return values.
 
     ```javascript
     // bad
-    // make() returns a new element
-    // based on the passed in tag name
+    // make() returns a new element based on the passed in tag name
     //
-    // @param <String> tag
-    // @return <Element> element
+    // @param {String} tag
+    // @return {Element} element
     function make(tag) {
 
       // ... stuff ...
@@ -672,13 +763,12 @@
     }
 
     // good
-    /**
-     * make() returns a new element
-     * based on the passed in tag name
-     *
-     * @param <String> tag
-     * @return <Element> element
-     */
+    /*
+    make() returns a new element based on the passed in tag name
+
+    @param {String} tag
+    @return {Object} element
+    */
     function make(tag) {
 
       // ... stuff ...
@@ -748,7 +838,7 @@
 
 ## Whitespace
 
-  - Use soft tabs set to 2 spaces
+  - Use hard tabs (set to 4 spaces)
 
     ```javascript
     // bad
@@ -761,9 +851,14 @@
     ∙var name;
     }
 
-    // good
+    // bad
     function() {
     ∙∙var name;
+    }
+
+    // good
+    function() {
+        var name;
     }
     ```
 
@@ -838,20 +933,9 @@
     }
     ```
 
-  - Use indentation when making long method chains.
+  - Use indentation when making long method chains. Of course, avoiding using chains this long in the first place is preferable.
 
     ```javascript
-    // bad
-    $('#items').find('.selected').highlight().end().find('.open').updateCount();
-
-    // good
-    $('#items')
-      .find('.selected')
-        .highlight()
-        .end()
-      .find('.open')
-        .updateCount();
-
     // bad
     var leds = stage.selectAll('.led').data(data).enter().append('svg:svg').class('led', true)
         .attr('width',  (radius + margin) * 2).append('svg:g')
@@ -1013,11 +1097,11 @@
 
     ```javascript
     // good
-    /**
-     * parseInt was the reason my code was slow.
-     * Bitshifting the String to coerce it to a
-     * Number made it a lot faster.
-     */
+    /*
+    parseInt was the reason my code was slow.
+    Bitshifting the String to coerce it to a
+    Number made it a lot faster.
+    */
     var val = inputValue >> 0;
     ```
 
@@ -1125,7 +1209,7 @@
     this._firstName = 'Panda';
     ```
 
-  - When saving a reference to `this` use `_this`.
+  - It is not recommended that you save a reference to `this`; YUI provides the ability to maintain context either by passing in a context as an argument, or through the use of the YUI [bind method](http://yuilibrary.com/yui/docs/api/classes/YUI.html#method_bind). If you *absolutely* need to save a reference to `this` use `_this`.
 
     ```javascript
     // bad
@@ -1145,6 +1229,13 @@
     }
 
     // good
+    function() {
+      return Y.bind(this, function() {
+        console.log(this);
+      });
+    }
+
+    // ok
     function() {
       var _this = this;
       return function() {
@@ -1325,123 +1416,84 @@
 
 ## Events
 
-  - When attaching data payloads to events (whether DOM events or something more proprietary like Backbone events), pass a hash instead of a raw value. This allows a subsequent contributor to add more data to the event payload without finding and updating every handler for the event. For example, instead of:
+  - When firing custom events, avoid locking your code into a specific fire and callback signature by sending all event data in an object passed as the second argument. For example, instead of:
 
-    ```js
+    ```javascript
     // bad
-    $(this).trigger('listingUpdated', listing.id);
+    Y.fire('birthday', 'John Cardinal', new Date(1949, 11, 12));
 
     // ... stuff ...
 
-    $(this).on('listingUpdated', function(e, listingId) {
-      // do something with listingId
+    Y.on('birthday', function(e, name, dateOfBirth) {
+      // do something with name and dateOfBirth
     });
     ```
 
     prefer:
 
-    ```js
+    ```javascript
     // good
-    $(this).trigger('listingUpdated', { listingId : listing.id });
+    Y.fire('birthday', {
+        name: 'John Cardinal',
+        dateOfBirth: new Date(1949, 11, 12)
+    });
 
     // ... stuff ...
 
-    $(this).on('listingUpdated', function(e, data) {
-      // do something with data.listingId
+    Y.on('birthday', function(event) {
+      // do something with event.name and event.dateOfBirth
     });
-    ```
-
-  **[⬆ back to top](#table-of-contents)**
-
-
-## Modules
-
-  - The module should start with a `!`. This ensures that if a malformed module forgets to include a final semicolon there aren't errors in production when the scripts get concatenated. [Explanation](https://github.com/airbnb/javascript/issues/44#issuecomment-13063933)
-  - The file should be named with camelCase, live in a folder with the same name, and match the name of the single export.
-  - Add a method called noConflict() that sets the exported module to the previous version and returns this one.
-  - Always declare `'use strict';` at the top of the module.
-
-    ```javascript
-    // fancyInput/fancyInput.js
-
-    !function(global) {
-      'use strict';
-
-      var previousFancyInput = global.FancyInput;
-
-      function FancyInput(options) {
-        this.options = options || {};
-      }
-
-      FancyInput.noConflict = function noConflict() {
-        global.FancyInput = previousFancyInput;
-        return FancyInput;
-      };
-
-      global.FancyInput = FancyInput;
-    }(this);
     ```
 
 **[⬆ back to top](#table-of-contents)**
 
 
-## jQuery
+## YUI
 
-  - Prefix jQuery object variables with a `$`.
+  - [YUI](http://yuilibrary.com/) is our primary JavaScript library. Don't pull in jQuery. Any other libraries you wish to use should be discussed with the Common Web team.
 
-    ```javascript
-    // bad
-    var sidebar = $('.sidebar');
-
-    // good
-    var $sidebar = $('.sidebar');
-    ```
-
-  - Cache jQuery lookups.
+  - Cache Y.Node lookups.
 
     ```javascript
     // bad
     function setSidebar() {
-      $('.sidebar').hide();
+      Y.one('.sidebar').hide();
 
       // ... stuff ...
 
-      $('.sidebar').css({
-        'background-color': 'pink'
+      Y.one('.sidebar').setStyle({
+        'backgroundColor': 'pink'
       });
     }
 
     // good
     function setSidebar() {
-      var $sidebar = $('.sidebar');
-      $sidebar.hide();
+      var sidebarNode = Y.one('.sidebar');
+      sidebarNode.hide();
 
       // ... stuff ...
 
-      $sidebar.css({
-        'background-color': 'pink'
+      sidebarNode.setStyle({
+        'backgroundColor': 'pink'
       });
     }
     ```
 
-  - For DOM queries use Cascading `$('.sidebar ul')` or parent > child `$('.sidebar > ul')`. [jsPerf](http://jsperf.com/jquery-find-vs-context-sel/16)
-  - Use `find` with scoped jQuery object queries.
+  - For DOM queries use Cascading `Y.one('.sidebar ul')` or parent > child `Y.one('.sidebar > ul')`. [jsPerf (using jQuery)](http://jsperf.com/jquery-find-vs-context-sel/16)
+  - Use `one` with scoped Y.Node queries.
 
     ```javascript
     // bad
-    $('ul', '.sidebar').hide();
-
-    // bad
-    $('.sidebar').find('ul').hide();
+    Y.one('.sidebar').one('ul').hide();
 
     // good
-    $('.sidebar ul').hide();
+    Y.one('.sidebar ul').hide();
 
     // good
-    $('.sidebar > ul').hide();
+    Y.one('.sidebar > ul').hide();
 
     // good
-    $sidebar.find('ul').hide();
+    sidebarNode.one('ul').hide();
     ```
 
 **[⬆ back to top](#table-of-contents)**
@@ -1449,6 +1501,7 @@
 
 ## ECMAScript 5 Compatibility
 
+  - Ensure any methods you're using are supported in all browsers your product is required to support.
   - Refer to [Kangax](https://twitter.com/kangax/)'s ES5 [compatibility table](http://kangax.github.com/es5-compat-table/)
 
 **[⬆ back to top](#table-of-contents)**
@@ -1491,7 +1544,6 @@
 **Other Styleguides**
 
   - [Google JavaScript Style Guide](http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml)
-  - [jQuery Core Style Guidelines](http://docs.jquery.com/JQuery_Core_Style_Guidelines)
   - [Principles of Writing Consistent, Idiomatic JavaScript](https://github.com/rwldrn/idiomatic.js/)
 
 **Other Styles**
@@ -1504,7 +1556,6 @@
 
   - [Understanding JavaScript Closures](http://javascriptweblog.wordpress.com/2010/10/25/understanding-javascript-closures/) - Angus Croll
   - [Basic JavaScript for the impatient programmer](http://www.2ality.com/2013/06/basic-javascript.html) - Dr. Axel Rauschmayer
-  - [You Might Not Need jQuery](http://youmightnotneedjquery.com/) - Zack Bloom & Adam Schwartz
   - [ES6 Features](https://github.com/lukehoban/es6features) - Luke Hoban
 
 **Books**
@@ -1573,7 +1624,7 @@
 
 ## Translation
 
-  This style guide is also available in other languages:
+  The original [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) is also available in other languages:
 
   - :de: **German**: [timofurrer/javascript-style-guide](https://github.com/timofurrer/javascript-style-guide)
   - :jp: **Japanese**: [mitsuruog/javacript-style-guide](https://github.com/mitsuruog/javacript-style-guide)
