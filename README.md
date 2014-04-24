@@ -118,6 +118,8 @@
     };
     ```
 
+  - Avoid trailing commas in object initialization - see [Commas](#commas).
+
 **[⬆ back to top](#table-of-contents)**
 
 ## Arrays
@@ -168,6 +170,8 @@
       // ... stuff ...
     }
     ```
+
+  - Avoid trailing commas in array initialization - see [Commas](#commas).
 
 **[⬆ back to top](#table-of-contents)**
 
