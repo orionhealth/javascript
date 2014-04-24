@@ -8,6 +8,8 @@ The primary changes from Airbnb's style guide are:
   1. Use YUIDoc syntax for code comments/documentation
   1. Use braces with all blocks, even single-line blocks
 
+**Note:** some of the links to more info, primarily in the YUI sections, link to pages on the internal Orion Health wiki.
+
 ## Table of Contents
 
   1. [Types](#types)
@@ -30,6 +32,9 @@ The primary changes from Airbnb's style guide are:
   1. [Accessors](#accessors)
   1. [Constructors](#constructors)
   1. [Events](#events)
+  1. [Modules](#modules)
+  1. [Files](#files)
+  1. [Copyright](#copyright)
   1. [YUI](#yui)
   1. [ECMAScript 5 Compatibility](#ecmascript-5-compatibility)
   1. [Testing](#testing)
@@ -1460,6 +1465,144 @@ The primary changes from Airbnb's style guide are:
       // do something with event.name and event.dateOfBirth
     });
     ```
+
+**[⬆ back to top](#table-of-contents)**
+
+
+## Modules
+
+  - Write your code using [YUI 3 modules](http://yuilibrary.com/yui/docs/yui/#yuiadd). You will be able to do this if you are on the new [Web Build Tooling](http://woki/display/SNA/Web+Build+Tooling). Host your source code in the `src/main/web` directory of your web bundle, with each module in it's own folder. Each module folder should follow the following file structure:
+
+    ```
+    nsp-my-module/
+     |
+     |--js
+     |   `--nsp-my-module.js
+     |
+     |--meta
+     |   `--nsp-my-module.json
+     |
+     `--build.json
+    ```
+
+    When your files are built, discovered modules will be added to a yui_config file, which let's YUI know where to load modules from. You can then access the module by declaring a dependency on it, for example:
+
+    ```javascript
+    YUI().use('nsp-my-module', function(Y) {
+        'use strict';
+
+        // ... stuff ...
+    });
+    ```
+
+  - Modules should be ordered grouped by native YUI modules, modules from other shared libaries, and finally your own modules; and then alphabetically ordered within each grouping.
+
+    Read [more](http://woki/display/OHP/Creating+YUI+3+Based+Modules) about creating YUI 3 modules.
+
+ - Expose classes via Y.namespace. Namespace your classes using your project code, to avoid clashes cross-project.
+
+    ```javascript
+    // nsp-my-class.js
+    YUI().use('base', function(Y) {
+        'use strict';
+
+        MyClass = Y.Base.create('nsp-my-class', Y.Base, [], {
+          // ... stuff ...
+        });
+
+        Y.namespace('NSP').MyClass = MyClass;
+    });
+
+    // nsp-my-other-class.js
+    YUI().use('base, nsp-my-class', function(Y) {
+        'use strict';
+
+        var MyClass = Y.NSP.MyClass;
+
+        // can now use functions on MyClass
+    });
+    ```
+
+**[⬆ back to top](#table-of-contents)**
+
+
+## Files
+
+  - Declare your JavaScript in external files, not in inline script blocks. As well as bringing performance benefits, it allows unit testing and static analysis of the file. [More info](http://developer.yahoo.com/performance/rules.html#external)
+
+  - Name JavaScript files using lowercase and hyphen-separation, e.g. `nsp-my-module.js`.
+
+  - All JavaScript must be inside one of the following 3 top level functions:
+
+    ```javascript
+    YUI.add('nsp-my-module', function(Y) {
+        // JavaScript goes here
+    });
+
+    YUI().use('nsp-my-module', function(Y) {
+        // JavaScript goes here
+    });
+
+    // Legacy use only, modules preferred
+    (function() {
+        // JavaScript goes here
+    }());
+    ```
+
+  - Always declare `'use strict';` as the first line of your module or top level function. [More info](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/Strict_mode)
+
+    ```javascript
+    YUI().use('nsp-my-module', function(Y) {
+        'use strict';
+        // ... stuff ...
+    });
+    ```
+
+**[⬆ back to top](#table-of-contents)**
+
+
+## Copyright
+
+  - Every internally developed JavaScript file must begin with the following copyright placeholder.
+
+    ```javascript
+    /*!!(C) ORCHESTRAL*/
+    ```
+
+    If you are using YUI 3 modules, you can create a file containing the placeholder, and prepend the file via the build.json file.
+
+    ```javascript
+    {
+        "name": "nsp-my-module",
+        "builds": {
+            "nsp-my-module": {
+                "prependfiles": [
+                    "../../.copyright.js"
+                ],
+                "jsfiles": [
+                    "nsp-my-module.js"
+                ]
+            }
+        },
+        "shifter": {
+            "strict": true
+        }
+    }
+    ```
+
+  - Third party JavaScript files must begin with a block comment containing the copyright or license information at the top of each file:
+
+    ```javascript
+    /*!!
+    YUI 3.5.1 (build 22)
+    Copyright 2012 Yahoo! Inc. All rights reserved.
+    Licensed under the BSD License.
+    http://yuilibrary.com/license/
+    */
+    YUI.add("node-base"...
+    ```
+
+  - **Note:** The comment must be a block comment, so if the resource uses in-line comments, or the copyright or license information is in a separate file, copy that information into a block comment at the top of the file. Start the comment with two exclamation marks to ensure that it is not stripped by the minification process. [More info](http://woki/display/IntDev/JavaScript+and+CSS+Copyright+and+Licenses)
 
 **[⬆ back to top](#table-of-contents)**
 
