@@ -1592,7 +1592,7 @@ The primary changes from Airbnb's style guide are:
 
 ## In the Wild
 
-  This is a list of organizations that are using this style guide. Send us a pull request or open an issue and we'll add you to the list.
+  This is a list of other organizations that have also forked the original [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript).
 
   - **Aan Zee**: [AanZee/javascript](https://github.com/AanZee/javascript)
   - **Airbnb**: [airbnb/javascript](https://github.com/airbnb/javascript)
