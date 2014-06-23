@@ -898,7 +898,7 @@ The primary changes from Airbnb's style guide are:
     var x = y + 5;
     ```
 
-  - Place an empty newline at the end of the file.
+  - End files with a single newline character.
 
     ```javascript
     // bad
@@ -908,11 +908,18 @@ The primary changes from Airbnb's style guide are:
     ```
 
     ```javascript
-    // good
+    // bad
     (function(global) {
       // ... stuff ...
-    })(this);
+    })(this);↵
+    ↵
+    ```
 
+    ```javascript
+    // good
+    (function(global) {
+      // ...stuff...
+    })(this);↵
     ```
 
   - Remove all trailing whitespace
@@ -1093,7 +1100,6 @@ The primary changes from Airbnb's style guide are:
     ```
 
   - If for whatever reason you are doing something wild and `parseInt` is your bottleneck and need to use Bitshift for [performance reasons](http://jsperf.com/coercion-vs-casting/3), leave a comment explaining why and what you're doing.
-  - **Note:** Be careful when using bitshift operations. Numbers are represented as [64-bit values](http://es5.github.io/#x4.3.19), but Bitshift operations always return a 32-bit integer ([source](http://es5.github.io/#x11.7)). Bitshift can lead to unexpected behavior for integer values larger than 32 bits. [Discussion](https://github.com/airbnb/javascript/issues/109)
 
     ```javascript
     // good
@@ -1103,6 +1109,14 @@ The primary changes from Airbnb's style guide are:
     Number made it a lot faster.
     */
     var val = inputValue >> 0;
+    ```
+
+  - **Note:** Be careful when using bitshift operations. Numbers are represented as [64-bit values](http://es5.github.io/#x4.3.19), but Bitshift operations always return a 32-bit integer ([source](http://es5.github.io/#x11.7)). Bitshift can lead to unexpected behavior for integer values larger than 32 bits. [Discussion](https://github.com/airbnb/javascript/issues/109). Largest signed 32-bit Int is 2,147,483,647:
+
+    ```javascript
+    2147483647 >> 0 //=> 2147483647
+    2147483648 >> 0 //=> -2147483648
+    2147483649 >> 0 //=> -2147483647
     ```
 
   - Booleans:
@@ -1145,7 +1159,7 @@ The primary changes from Airbnb's style guide are:
     // bad
     var OBJEcttsssss = {};
     var this_is_my_object = {};
-    function c() {};
+    function c() {}
     var u = new user({
       name: 'Bob Parr'
     });
@@ -1156,7 +1170,7 @@ The primary changes from Airbnb's style guide are:
 
     // good
     var thisIsMyObject = {};
-    function thisIsMyFunction() {};
+    function thisIsMyFunction() {}
     var user = new User({
       name: 'Bob Parr'
     });
@@ -1271,6 +1285,8 @@ The primary changes from Airbnb's style guide are:
       }
     };
     ```
+
+  - **Note:** IE8 and below exhibit some quirks with named function expressions.  See [http://kangax.github.io/nfe/](http://kangax.github.io/nfe/) for more info.
 
 **[⬆ back to top](#table-of-contents)**
 
@@ -1598,6 +1614,7 @@ The primary changes from Airbnb's style guide are:
   - **Airbnb**: [airbnb/javascript](https://github.com/airbnb/javascript)
   - **American Insitutes for Research**: [AIRAST/javascript](https://github.com/AIRAST/javascript)
   - **Compass Learning**: [compasslearning/javascript-style-guide](https://github.com/compasslearning/javascript-style-guide)
+  - **DailyMotion**: [dailymotion/javascript](https://github.com/dailymotion/javascript)
   - **Digitpaint** [digitpaint/javascript](https://github.com/digitpaint/javascript)
   - **ExactTarget**: [ExactTarget/javascript](https://github.com/ExactTarget/javascript)
   - **Gawker Media**: [gawkermedia/javascript](https://github.com/gawkermedia/javascript)
@@ -1614,10 +1631,12 @@ The primary changes from Airbnb's style guide are:
   - **Orion Health**: [orionhealth/javascript](https://github.com/orionhealth/javascript)
   - **Peerby**: [Peerby/javascript](https://github.com/Peerby/javascript)
   - **Razorfish**: [razorfish/javascript-style-guide](https://github.com/razorfish/javascript-style-guide)
-  - **SeekingAlpha**: [seekingalpha/javascript-style-guide](https://github.com/seekingalpha/javascript-style-guide)
+  - **reddit**: [reddit/styleguide/javascript](https://github.com/reddit/styleguide/tree/master/javascript)
   - **REI**: [reidev/js-style-guide](https://github.com/reidev/js-style-guide)
   - **Ripple**: [ripple/javascript-style-guide](https://github.com/ripple/javascript-style-guide)
+  - **SeekingAlpha**: [seekingalpha/javascript-style-guide](https://github.com/seekingalpha/javascript-style-guide)
   - **Shutterfly**: [shutterfly/javascript](https://github.com/shutterfly/javascript)
+  - **TheLadders**: [TheLadders/javascript](https://github.com/TheLadders/javascript)
   - **Userify**: [userify/javascript](https://github.com/userify/javascript)
   - **Zillow**: [zillow/javascript](https://github.com/zillow/javascript)
   - **ZocDoc**: [ZocDoc/javascript](https://github.com/ZocDoc/javascript)
