@@ -1244,9 +1244,9 @@ The primary changes from Airbnb's style guide are:
 
     // good
     function() {
-      return Y.bind(this, function() {
+      return Y.bind(function() {
         console.log(this);
-      });
+      }, this);
     }
 
     // ok
