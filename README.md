@@ -831,7 +831,7 @@ The primary changes from Airbnb's style guide are:
 
       return this;
     }
-  ```
+    ```
 
 **[⬆ back to top](#table-of-contents)**
 
